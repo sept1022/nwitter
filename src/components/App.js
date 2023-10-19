@@ -11,10 +11,16 @@ function App() {
     useEffect(() => {
         auth.onAuthStateChanged((user) => {
             if(user) {
-                setIsLoggedIn(true);
-                setUserObj(user);
+                // setIsLoggedIn(true);
+                // setUserObj(user);
+                setUserObj({
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    updateProfile: (args) => user.updateProfile(args)
+                })
             }
             else
+                setUserObj(false)
                 setIsLoggedIn(false);
 
             setInit(true);
@@ -23,14 +29,20 @@ function App() {
     // setInterval(() => console.log(auth.currentUser), 2000)
 
     const refreshUser = () => {
-        setUserObj(auth.currentUser);
+        const user = auth.currentUser;
+        setUserObj({
+            uid: user.uid,
+            displayName: user.displayName,
+            getIdToken: user.getIdToken,
+            updateProfile: (args) => user.updateProfile(args)
+        });
     }
 
     return (
         <>
             {init ? (
                 <AppRouter
-                    isLoggedIn={isLoggedIn}
+                    isLoggedIn={Boolean(userObj)}
                     userObj={userObj}
                     refreshUser={refreshUser} /> )
                 : (
