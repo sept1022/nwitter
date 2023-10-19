@@ -6,25 +6,23 @@ import {createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPo
 const Auth = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [newAccount, setNewAccount] = useState(true)
+    const [newAccount, setNewAccount] = useState(false)
     const [error, setError] = useState("");
 
     const toggleAccount = () => setNewAccount((prev) => !prev)
 
     const onSocialLogin = async (event) => {
-        console.log(event.target.name)
         const {
             target: { name }
         } = event;
 
         let provider;
-        if(name == "google")
+        if(name === "google")
             provider = new GoogleAuthProvider()
         else if(name === "github")
             provider = new GithubAuthProvider()
 
         const data = await signInWithPopup(auth, provider);
-        console.log(data)
     }
 
     const onChange = (e) => {
@@ -45,7 +43,6 @@ const Auth = () => {
                 data = await createUserWithEmailAndPassword(auth, email, password);
             else
                 data = await signInWithEmailAndPassword(auth, email, password);
-            console.log(data)
         } catch(error) {
             setError(error.message);
             // console.log(error);
